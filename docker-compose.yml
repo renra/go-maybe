@@ -8,6 +8,5 @@ services:
     volumes:
       - ./maybe/:/go/src/app/maybe/
       - ./test/:/go/src/app/test/
-      - ./examples/:/go/src/app/examples/
       - ./Makefile:/go/src/app/Makefile
 

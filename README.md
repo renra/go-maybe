@@ -1,6 +1,6 @@
 # Go Maybe
 
-Maybes for Go. This package contains definitions of a maybe wrappers for a few basic and often-used types in Go. In case you don't know what a maybe is, you can read about it for example [here](https://en.wikipedia.org/wiki/Option_type).
+Maybes for Go. This package contains definitions of maybe wrappers for a few basic and often-used types in Go. In case you don't know what a maybe is, you can read about it for example [here](https://en.wikipedia.org/wiki/Option_type).
 
 Wait! Go already has maybes, right? It has pointers.
 
@@ -33,7 +33,7 @@ if maybeString.HasValue() {
 }
 ```
 
-It might or might not be more expressive, but if there were no other reason it would pretty much be just extra code.
+It might or might not be more expressive, depending on your opinion, nonetheless if there were no other reason it would pretty much be just extra code.
 
 2) It's a custom type and therefore allows you to implement the [Scanner](https://golang.org/pkg/database/sql/#Scanner) and [Valuer](https://golang.org/pkg/database/sql/driver/#Valuer) interfaces. And that's what the maybe types do. Therefore you can use them directly to unmarshal data from your SQL queries without the need of an intermediary struct.
 
@@ -86,7 +86,7 @@ func main() {
   m := maybe.NewInt(&number)
 
   if m.HasValue() {
-    fmt.Println("Yes, not it's safe to call Get(): %d", m.Get())
+    fmt.Println("Yes, now it's safe to call Get(): %d", m.Get())
   }
 }
 ```

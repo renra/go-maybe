@@ -7,18 +7,18 @@ import (
   "github.com/stretchr/testify/assert"
 )
 
-type IntSuite struct {
+type Int64Suite struct {
   suite.Suite
 }
 
-func (s *IntSuite) TestWithNilRef() {
-  m := maybe.NewInt(nil)
+func (s *Int64Suite) TestWithNilRef() {
+  m := maybe.NewInt64(nil)
 
   assert.Equal(s.T(), false, m.HasValue())
 
   value, err := m.DerefSafe()
 
-  assert.Equal(s.T(), 0, value)
+  assert.Equal(s.T(), int64(0), value)
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), maybe.DereferenceError, err.Error())
 
@@ -32,9 +32,9 @@ func (s *IntSuite) TestWithNilRef() {
   m.Deref()
 }
 
-func (s *IntSuite) TestWithValue() {
-  input := 9
-  m := maybe.NewInt(&input)
+func (s *Int64Suite) TestWithValue() {
+  input := int64(9)
+  m := maybe.NewInt64(&input)
 
   assert.Equal(s.T(), true, m.HasValue())
 
@@ -45,32 +45,32 @@ func (s *IntSuite) TestWithValue() {
   assert.Equal(s.T(), input, m.Deref())
 }
 
-func (s *IntSuite) TestValue() {
-  input := 12
+func (s *Int64Suite) TestValue() {
+  input := int64(12)
 
-  m := maybe.NewInt(&input)
+  m := maybe.NewInt64(&input)
   value, err := m.Value()
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), input, value)
 
-  m = maybe.NewInt(nil)
+  m = maybe.NewInt64(nil)
   value, err = m.Value()
 
   assert.Nil(s.T(), err)
   assert.Nil(s.T(), value)
 }
 
-func (s *IntSuite) TestScan() {
-  m := maybe.NewInt(nil)
+func (s *Int64Suite) TestScan() {
+  m := maybe.NewInt64(nil)
 
   err := m.Scan(nil)
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 
-  // Int input
-  input := 12
+  // Int64 input
+  input := int64(12)
   err = m.Scan(input)
 
   assert.Nil(s.T(), err)

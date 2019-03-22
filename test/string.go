@@ -1,24 +1,23 @@
 package test
 
 import (
-  "fmt"
   "app/maybe"
   "github.com/stretchr/testify/suite"
   "github.com/stretchr/testify/assert"
 )
 
-type IntSuite struct {
+type StringSuite struct {
   suite.Suite
 }
 
-func (s *IntSuite) TestWithNilRef() {
-  m := maybe.NewInt(nil)
+func (s *StringSuite) TestWithNilRef() {
+  m := maybe.NewString(nil)
 
   assert.Equal(s.T(), false, m.HasValue())
 
   value, err := m.DerefSafe()
 
-  assert.Equal(s.T(), 0, value)
+  assert.Equal(s.T(), "", value)
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), maybe.DereferenceError, err.Error())
 
@@ -32,9 +31,9 @@ func (s *IntSuite) TestWithNilRef() {
   m.Deref()
 }
 
-func (s *IntSuite) TestWithValue() {
-  input := 9
-  m := maybe.NewInt(&input)
+func (s *StringSuite) TestWithValue() {
+  input := "It is only with the heart that you can see well."
+  m := maybe.NewString(&input)
 
   assert.Equal(s.T(), true, m.HasValue())
 
@@ -45,41 +44,40 @@ func (s *IntSuite) TestWithValue() {
   assert.Equal(s.T(), input, m.Deref())
 }
 
-func (s *IntSuite) TestValue() {
-  input := 12
-
-  m := maybe.NewInt(&input)
+func (s *StringSuite) TestValue() {
+  input := "It is only with the heart that you can see well."
+  m := maybe.NewString(&input)
   value, err := m.Value()
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), input, value)
 
-  m = maybe.NewInt(nil)
+  m = maybe.NewString(nil)
   value, err = m.Value()
 
   assert.Nil(s.T(), err)
   assert.Nil(s.T(), value)
 }
 
-func (s *IntSuite) TestScan() {
-  m := maybe.NewInt(nil)
+func (s *StringSuite) TestScan() {
+  m := maybe.NewString(nil)
 
   err := m.Scan(nil)
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 
-  // Int input
-  input := 12
-  err = m.Scan(input)
+  stringInput := "What is essential is invisible to the eyes."
+  err = m.Scan(stringInput)
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), true, m.HasValue())
-  assert.Equal(s.T(), input, m.Deref())
+  assert.Equal(s.T(), stringInput, m.Deref())
 
-  // String input
-  err = m.Scan(fmt.Sprintf("%d", input))
+  input := 12
+  err = m.Scan(input)
 
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 }
+

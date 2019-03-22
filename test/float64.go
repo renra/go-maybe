@@ -83,5 +83,3 @@ func (s *Float64Suite) TestScan() {
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 }
-
-

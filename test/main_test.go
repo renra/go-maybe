@@ -36,3 +36,7 @@ func TestFloat32(t *testing.T) {
 func TestString(t *testing.T) {
   suite.Run(t, new(StringSuite))
 }
+
+func TestTime(t *testing.T) {
+  suite.Run(t, new(TimeSuite))
+}

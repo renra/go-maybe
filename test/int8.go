@@ -83,5 +83,3 @@ func (s *Int8Suite) TestScan() {
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 }
-
-

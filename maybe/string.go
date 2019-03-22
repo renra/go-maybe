@@ -18,7 +18,7 @@ func (m String) HasValue() bool {
   return !(m.ref == nil)
 }
 
-func (m String) DerefSafe() (string, *errtrace.Error) {
+func (m String) SafeGet() (string, *errtrace.Error) {
   if !m.HasValue() {
     return "", errtrace.New(DereferenceError)
   }
@@ -27,8 +27,8 @@ func (m String) DerefSafe() (string, *errtrace.Error) {
 }
 
 // Convenient but unsafe. Use at your own risk after checking HasValue()
-func (m String) Deref() string {
-  value, err := m.DerefSafe()
+func (m String) Get() string {
+  value, err := m.SafeGet()
 
   if err != nil {
     panic(err)
@@ -58,7 +58,7 @@ func (m *String) Scan(value interface{}) error {
 
 func (m String) Value() (driver.Value, error) {
   if m.HasValue() {
-    return m.Deref(), nil
+    return m.Get(), nil
   } else {
     return nil, nil
   }

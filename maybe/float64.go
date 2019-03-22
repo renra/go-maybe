@@ -18,7 +18,7 @@ func (m Float64) HasValue() bool {
   return !(m.ref == nil)
 }
 
-func (m Float64) DerefSafe() (float64, *errtrace.Error) {
+func (m Float64) SafeGet() (float64, *errtrace.Error) {
   if !m.HasValue() {
     return 0, errtrace.New(DereferenceError)
   }
@@ -27,8 +27,8 @@ func (m Float64) DerefSafe() (float64, *errtrace.Error) {
 }
 
 // Convenient but unsafe. Use at your own risk after checking HasValue()
-func (m Float64) Deref() float64 {
-  value, err := m.DerefSafe()
+func (m Float64) Get() float64 {
+  value, err := m.SafeGet()
 
   if err != nil {
     panic(err)
@@ -58,7 +58,7 @@ func (m *Float64) Scan(value interface{}) error {
 
 func (m Float64) Value() (driver.Value, error) {
   if m.HasValue() {
-    return m.Deref(), nil
+    return m.Get(), nil
   } else {
     return nil, nil
   }

@@ -15,7 +15,7 @@ func (s *StringSuite) TestWithNilRef() {
 
   assert.Equal(s.T(), false, m.HasValue())
 
-  value, err := m.DerefSafe()
+  value, err := m.SafeGet()
 
   assert.Equal(s.T(), "", value)
   assert.NotNil(s.T(), err)
@@ -28,7 +28,7 @@ func (s *StringSuite) TestWithNilRef() {
     assert.Equal(s.T(), maybe.DereferenceError, err.Error())
   }()
 
-  m.Deref()
+  m.Get()
 }
 
 func (s *StringSuite) TestWithValue() {
@@ -37,11 +37,11 @@ func (s *StringSuite) TestWithValue() {
 
   assert.Equal(s.T(), true, m.HasValue())
 
-  value, err := m.DerefSafe()
+  value, err := m.SafeGet()
 
   assert.Equal(s.T(), input, value)
   assert.Nil(s.T(), err)
-  assert.Equal(s.T(), input, m.Deref())
+  assert.Equal(s.T(), input, m.Get())
 }
 
 func (s *StringSuite) TestValue() {
@@ -72,7 +72,7 @@ func (s *StringSuite) TestScan() {
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), true, m.HasValue())
-  assert.Equal(s.T(), stringInput, m.Deref())
+  assert.Equal(s.T(), stringInput, m.Get())
 
   input := 12
   err = m.Scan(input)

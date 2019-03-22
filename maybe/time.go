@@ -19,7 +19,7 @@ func (m Time) HasValue() bool {
   return !(m.ref == nil)
 }
 
-func (m Time) DerefSafe() (time.Time, *errtrace.Error) {
+func (m Time) SafeGet() (time.Time, *errtrace.Error) {
   if !m.HasValue() {
     return time.Time{}, errtrace.New(DereferenceError)
   }
@@ -28,8 +28,8 @@ func (m Time) DerefSafe() (time.Time, *errtrace.Error) {
 }
 
 // Convenient but unsafe. Use at your own risk after checking HasValue()
-func (m Time) Deref() time.Time {
-  value, err := m.DerefSafe()
+func (m Time) Get() time.Time {
+  value, err := m.SafeGet()
 
   if err != nil {
     panic(err)
@@ -60,7 +60,7 @@ func (m *Time) Scan(value interface{}) error {
 
 func (m Time) Value() (driver.Value, error) {
   if m.HasValue() {
-    return m.Deref(), nil
+    return m.Get(), nil
   } else {
     return nil, nil
   }

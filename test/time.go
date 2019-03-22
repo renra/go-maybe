@@ -17,7 +17,7 @@ func (s *TimeSuite) TestWithNilRef() {
 
   assert.Equal(s.T(), false, m.HasValue())
 
-  value, err := m.DerefSafe()
+  value, err := m.SafeGet()
 
   assert.Equal(s.T(), time.Time{}, value)
   assert.NotNil(s.T(), err)
@@ -30,7 +30,7 @@ func (s *TimeSuite) TestWithNilRef() {
     assert.Equal(s.T(), maybe.DereferenceError, err.Error())
   }()
 
-  m.Deref()
+  m.Get()
 }
 
 func (s *TimeSuite) TestWithValue() {
@@ -39,11 +39,11 @@ func (s *TimeSuite) TestWithValue() {
 
   assert.Equal(s.T(), true, m.HasValue())
 
-  value, err := m.DerefSafe()
+  value, err := m.SafeGet()
 
   assert.Equal(s.T(), input, value)
   assert.Nil(s.T(), err)
-  assert.Equal(s.T(), input, m.Deref())
+  assert.Equal(s.T(), input, m.Get())
 }
 
 func (s *TimeSuite) TestValue() {
@@ -78,7 +78,7 @@ func (s *TimeSuite) TestScan() {
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), true, m.HasValue())
-  assert.Equal(s.T(), inputUnix, m.Deref().Unix())
+  assert.Equal(s.T(), inputUnix, m.Get().Unix())
 
   // String input
   err = m.Scan(fmt.Sprintf("%v", input))

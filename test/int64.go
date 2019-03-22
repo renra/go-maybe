@@ -16,7 +16,7 @@ func (s *Int64Suite) TestWithNilRef() {
 
   assert.Equal(s.T(), false, m.HasValue())
 
-  value, err := m.DerefSafe()
+  value, err := m.SafeGet()
 
   assert.Equal(s.T(), int64(0), value)
   assert.NotNil(s.T(), err)
@@ -29,7 +29,7 @@ func (s *Int64Suite) TestWithNilRef() {
     assert.Equal(s.T(), maybe.DereferenceError, err.Error())
   }()
 
-  m.Deref()
+  m.Get()
 }
 
 func (s *Int64Suite) TestWithValue() {
@@ -38,11 +38,11 @@ func (s *Int64Suite) TestWithValue() {
 
   assert.Equal(s.T(), true, m.HasValue())
 
-  value, err := m.DerefSafe()
+  value, err := m.SafeGet()
 
   assert.Equal(s.T(), input, value)
   assert.Nil(s.T(), err)
-  assert.Equal(s.T(), input, m.Deref())
+  assert.Equal(s.T(), input, m.Get())
 }
 
 func (s *Int64Suite) TestValue() {
@@ -75,7 +75,7 @@ func (s *Int64Suite) TestScan() {
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), true, m.HasValue())
-  assert.Equal(s.T(), input, m.Deref())
+  assert.Equal(s.T(), input, m.Get())
 
   // String input
   err = m.Scan(fmt.Sprintf("%d", input))

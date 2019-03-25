@@ -4,6 +4,7 @@ import (
   "fmt"
   "time"
   "app/maybe"
+  "encoding/json"
   "github.com/stretchr/testify/suite"
   "github.com/stretchr/testify/assert"
 )
@@ -124,4 +125,23 @@ func (s *TimeSuite) TestUnmarshalJSON() {
 
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
+}
+
+func (s *TimeSuite) TestMarshalAndUnmarshalCycle() {
+  input := time.Now()
+
+  payload := struct{
+    Field maybe.Time
+  }{
+    Field: maybe.NewTime(&input),
+  }
+
+  serializedPayload, err := json.Marshal(payload)
+  assert.Nil(s.T(), err)
+
+  err = json.Unmarshal(serializedPayload, &payload)
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), true, payload.Field.HasValue())
+  assert.Equal(s.T(), input.Unix(), payload.Field.Get().Unix())
 }

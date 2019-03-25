@@ -2,6 +2,7 @@ package maybe
 
 import (
   "errors"
+  "encoding/json"
   "database/sql/driver"
   "github.com/renra/go-errtrace/errtrace"
 )
@@ -66,9 +67,9 @@ func (m String) Value() (driver.Value, error) {
 
 func (m String) MarshalJSON() ([]byte, error) {
   if m.HasValue() {
-    return []byte(m.Get()), nil
+    return json.Marshal(m.Get())
   } else {
-    return []byte("null"), nil
+    return json.Marshal(nil)
   }
 }
 
@@ -80,7 +81,15 @@ func (m *String) UnmarshalJSON(input []byte) error {
     return nil
   }
 
-  m.ref = &inputStr
+  var value string
+  err := json.Unmarshal(input, &value)
+
+  if err != nil {
+    m.ref = nil
+    return err
+  }
+
+  m.ref = &value
   return nil
 }
 

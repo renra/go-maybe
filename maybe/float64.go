@@ -1,9 +1,9 @@
 package maybe
 
 import (
-  "fmt"
   "errors"
   "strconv"
+  "encoding/json"
   "database/sql/driver"
   "github.com/renra/go-errtrace/errtrace"
 )
@@ -68,9 +68,9 @@ func (m Float64) Value() (driver.Value, error) {
 
 func (m Float64) MarshalJSON() ([]byte, error) {
   if m.HasValue() {
-    return []byte(fmt.Sprintf("%f", m.Get())), nil
+    return json.Marshal(m.Get())
   } else {
-    return []byte("null"), nil
+    return json.Marshal(nil)
   }
 }
 

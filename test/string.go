@@ -1,7 +1,9 @@
 package test
 
 import (
+  "fmt"
   "app/maybe"
+  "encoding/json"
   "github.com/stretchr/testify/suite"
   "github.com/stretchr/testify/assert"
 )
@@ -93,7 +95,7 @@ func (s *StringSuite) TestMarshalJSON() {
   bytes, err = m.MarshalJSON()
 
   assert.Nil(s.T(), err)
-  assert.Equal(s.T(), []byte(input), bytes)
+  assert.Equal(s.T(), []byte(fmt.Sprintf("\"%s\"", input)), bytes)
 }
 
 func (s *StringSuite) TestUnmarshalJSON() {
@@ -104,16 +106,35 @@ func (s *StringSuite) TestUnmarshalJSON() {
   assert.Equal(s.T(), false, m.HasValue())
 
   input := "12"
-  err = m.UnmarshalJSON([]byte(input))
+  err = m.UnmarshalJSON([]byte(fmt.Sprintf("\"%s\"", input)))
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), true, m.HasValue())
   assert.Equal(s.T(), input, m.Get())
 
   input = "foo"
-  err = m.UnmarshalJSON([]byte(input))
+  err = m.UnmarshalJSON([]byte(fmt.Sprintf("\"%s\"", input)))
 
   assert.Nil(s.T(), err)
   assert.Equal(s.T(), true, m.HasValue())
   assert.Equal(s.T(), input, m.Get())
+}
+
+func (s *StringSuite) TestMarshalAndUnmarshalCycle() {
+  input := "A lazy dog catches the busy fox"
+
+  payload := struct{
+    Field maybe.String
+  }{
+    Field: maybe.NewString(&input),
+  }
+
+  serializedPayload, err := json.Marshal(payload)
+  assert.Nil(s.T(), err)
+
+  err = json.Unmarshal(serializedPayload, &payload)
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), true, payload.Field.HasValue())
+  assert.Equal(s.T(), input, payload.Field.Get())
 }

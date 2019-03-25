@@ -1,8 +1,10 @@
 package maybe
 
 import (
+  "fmt"
   "time"
   "errors"
+  "strconv"
   "database/sql/driver"
   "github.com/renra/go-errtrace/errtrace"
 )
@@ -64,4 +66,33 @@ func (m Time) Value() (driver.Value, error) {
   } else {
     return nil, nil
   }
+}
+
+func (m Time) MarshalJSON() ([]byte, error) {
+  if m.HasValue() {
+    return []byte(fmt.Sprintf("%d", m.Get().Unix())), nil
+  } else {
+    return []byte("null"), nil
+  }
+}
+
+func (m *Time) UnmarshalJSON(input []byte) error {
+  inputStr := string(input)
+
+  if inputStr == "null" {
+    m.ref = nil
+    return nil
+  }
+
+  value, err := strconv.ParseInt(inputStr, 10, 64)
+
+  if err != nil {
+    m.ref = nil
+    return err
+  }
+
+  time := time.Unix(value, 0)
+
+  m.ref = &time
+  return nil
 }

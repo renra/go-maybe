@@ -86,3 +86,42 @@ func (s *TimeSuite) TestScan() {
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 }
+
+func (s *TimeSuite) TestMarshalJSON() {
+  m := maybe.NewTime(nil)
+  bytes, err := m.MarshalJSON()
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), []byte("null"), bytes)
+
+  input := int64(2000)
+  time := time.Unix(input, 0)
+
+  m = maybe.NewTime(&time)
+  bytes, err = m.MarshalJSON()
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), []byte(fmt.Sprintf("%d", input)), bytes)
+}
+
+func (s *TimeSuite) TestUnmarshalJSON() {
+  m := maybe.NewTime(nil)
+  err := m.UnmarshalJSON([]byte("null"))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), false, m.HasValue())
+
+  input := int64(12)
+  time := time.Unix(input, 0)
+
+  err = m.UnmarshalJSON([]byte(fmt.Sprintf("%d", input)))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), true, m.HasValue())
+  assert.Equal(s.T(), time.Unix(), m.Get().Unix())
+
+  err = m.UnmarshalJSON([]byte("foo"))
+
+  assert.NotNil(s.T(), err)
+  assert.Equal(s.T(), false, m.HasValue())
+}

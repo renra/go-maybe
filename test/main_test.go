@@ -37,10 +37,6 @@ func TestString(t *testing.T) {
   suite.Run(t, new(StringSuite))
 }
 
-func TestJSON(t *testing.T) {
-  suite.Run(t, new(JSONSuite))
-}
-
 func TestTime(t *testing.T) {
   suite.Run(t, new(TimeSuite))
 }

@@ -81,7 +81,15 @@ func (m *String) UnmarshalJSON(input []byte) error {
     return nil
   }
 
-  m.ref = &inputStr
+  var value string
+  err := json.Unmarshal(input, &value)
+
+  if err != nil {
+    m.ref = nil
+    return err
+  }
+
+  m.ref = &value
   return nil
 }
 

@@ -3,6 +3,7 @@ package test
 import (
   "fmt"
   "app/maybe"
+  "encoding/json"
   "github.com/stretchr/testify/suite"
   "github.com/stretchr/testify/assert"
 )
@@ -117,4 +118,23 @@ func (s *Int8Suite) TestUnmarshalJSON() {
 
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
+}
+
+func (s *Int8Suite) TestMarshalAndUnmarshalCycle() {
+  input := int8(12)
+
+  payload := struct{
+    Field maybe.Int8
+  }{
+    Field: maybe.NewInt8(&input),
+  }
+
+  serializedPayload, err := json.Marshal(payload)
+  assert.Nil(s.T(), err)
+
+  err = json.Unmarshal(serializedPayload, &payload)
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), true, payload.Field.HasValue())
+  assert.Equal(s.T(), input, payload.Field.Get())
 }

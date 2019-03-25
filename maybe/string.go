@@ -64,3 +64,23 @@ func (m String) Value() (driver.Value, error) {
   }
 }
 
+func (m String) MarshalJSON() ([]byte, error) {
+  if m.HasValue() {
+    return []byte(m.Get()), nil
+  } else {
+    return []byte("null"), nil
+  }
+}
+
+func (m *String) UnmarshalJSON(input []byte) error {
+  inputStr := string(input)
+
+  if inputStr == "null" {
+    m.ref = nil
+    return nil
+  }
+
+  m.ref = &inputStr
+  return nil
+}
+

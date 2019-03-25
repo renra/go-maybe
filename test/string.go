@@ -80,3 +80,40 @@ func (s *StringSuite) TestScan() {
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 }
+
+func (s *StringSuite) TestMarshalJSON() {
+  m := maybe.NewString(nil)
+  bytes, err := m.MarshalJSON()
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), []byte("null"), bytes)
+
+  input := "12"
+  m = maybe.NewString(&input)
+  bytes, err = m.MarshalJSON()
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), []byte(input), bytes)
+}
+
+func (s *StringSuite) TestUnmarshalJSON() {
+  m := maybe.NewString(nil)
+  err := m.UnmarshalJSON([]byte("null"))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), false, m.HasValue())
+
+  input := "12"
+  err = m.UnmarshalJSON([]byte(input))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), true, m.HasValue())
+  assert.Equal(s.T(), input, m.Get())
+
+  input = "foo"
+  err = m.UnmarshalJSON([]byte(input))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), true, m.HasValue())
+  assert.Equal(s.T(), input, m.Get())
+}

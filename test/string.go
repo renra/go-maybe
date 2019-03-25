@@ -1,6 +1,7 @@
 package test
 
 import (
+  "fmt"
   "app/maybe"
   "github.com/stretchr/testify/suite"
   "github.com/stretchr/testify/assert"
@@ -93,7 +94,7 @@ func (s *StringSuite) TestMarshalJSON() {
   bytes, err = m.MarshalJSON()
 
   assert.Nil(s.T(), err)
-  assert.Equal(s.T(), []byte(input), bytes)
+  assert.Equal(s.T(), []byte(fmt.Sprintf("\"%s\"", input)), bytes)
 }
 
 func (s *StringSuite) TestUnmarshalJSON() {

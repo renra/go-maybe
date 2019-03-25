@@ -96,7 +96,7 @@ func (s *Float32Suite) TestMarshalJSON() {
   bytes, err = m.MarshalJSON()
 
   assert.Nil(s.T(), err)
-  assert.Equal(s.T(), []byte(fmt.Sprintf("%f", input)), bytes)
+  assert.Equal(s.T(), []byte(fmt.Sprintf("%.1f", input)), bytes)
 }
 
 func (s *Float32Suite) TestUnmarshalJSON() {

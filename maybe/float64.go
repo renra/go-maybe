@@ -89,9 +89,7 @@ func (m *Float64) UnmarshalJSON(input []byte) error {
     return err
   }
 
-  valueFloat64 := float64(value)
-
-  m.ref = &valueFloat64
+  m.ref = &value
   return nil
 }
 

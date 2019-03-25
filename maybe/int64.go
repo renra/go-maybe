@@ -82,15 +82,15 @@ func (m *Int64) UnmarshalJSON(input []byte) error {
     return nil
   }
 
-  value, err := strconv.Atoi(inputStr)
+  value, err := strconv.ParseInt(inputStr, 10, 64)
 
   if err != nil {
     m.ref = nil
     return err
   }
 
-  valueInt8 := int64(value)
+  valueInt64 := int64(value)
 
-  m.ref = &valueInt8
+  m.ref = &valueInt64
   return nil
 }

@@ -1,7 +1,9 @@
 package maybe
 
 import (
+  "fmt"
   "errors"
+  "strconv"
   "database/sql/driver"
   "github.com/renra/go-errtrace/errtrace"
 )
@@ -62,4 +64,33 @@ func (m Int32) Value() (driver.Value, error) {
   } else {
     return nil, nil
   }
+}
+
+func (m Int32) MarshalJSON() ([]byte, error) {
+  if m.HasValue() {
+    return []byte(fmt.Sprintf("%d", m.Get())), nil
+  } else {
+    return []byte("null"), nil
+  }
+}
+
+func (m *Int32) UnmarshalJSON(input []byte) error {
+  inputStr := string(input)
+
+  if inputStr == "null" {
+    m.ref = nil
+    return nil
+  }
+
+  value, err := strconv.ParseInt(inputStr, 10, 32)
+
+  if err != nil {
+    m.ref = nil
+    return err
+  }
+
+  valueInt32 := int32(value)
+
+  m.ref = &valueInt32
+  return nil
 }

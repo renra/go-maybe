@@ -83,3 +83,38 @@ func (s *Float64Suite) TestScan() {
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 }
+
+func (s *Float64Suite) TestMarshalJSON() {
+  m := maybe.NewFloat64(nil)
+  bytes, err := m.MarshalJSON()
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), []byte("null"), bytes)
+
+  input := float64(12.5)
+  m = maybe.NewFloat64(&input)
+  bytes, err = m.MarshalJSON()
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), []byte(fmt.Sprintf("%f", input)), bytes)
+}
+
+func (s *Float64Suite) TestUnmarshalJSON() {
+  m := maybe.NewFloat64(nil)
+  err := m.UnmarshalJSON([]byte("null"))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), false, m.HasValue())
+
+  input := float64(12.5)
+  err = m.UnmarshalJSON([]byte(fmt.Sprintf("%f", input)))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), true, m.HasValue())
+  assert.Equal(s.T(), input, m.Get())
+
+  err = m.UnmarshalJSON([]byte("foo"))
+
+  assert.NotNil(s.T(), err)
+  assert.Equal(s.T(), false, m.HasValue())
+}

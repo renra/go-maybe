@@ -83,3 +83,38 @@ func (s *Int16Suite) TestScan() {
   assert.NotNil(s.T(), err)
   assert.Equal(s.T(), false, m.HasValue())
 }
+
+func (s *Int16Suite) TestMarshalJSON() {
+  m := maybe.NewInt16(nil)
+  bytes, err := m.MarshalJSON()
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), []byte("null"), bytes)
+
+  input := int16(12)
+  m = maybe.NewInt16(&input)
+  bytes, err = m.MarshalJSON()
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), []byte(fmt.Sprintf("%d", input)), bytes)
+}
+
+func (s *Int16Suite) TestUnmarshalJSON() {
+  m := maybe.NewInt16(nil)
+  err := m.UnmarshalJSON([]byte("null"))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), false, m.HasValue())
+
+  input := int16(12)
+  err = m.UnmarshalJSON([]byte(fmt.Sprintf("%d", input)))
+
+  assert.Nil(s.T(), err)
+  assert.Equal(s.T(), true, m.HasValue())
+  assert.Equal(s.T(), input, m.Get())
+
+  err = m.UnmarshalJSON([]byte("foo"))
+
+  assert.NotNil(s.T(), err)
+  assert.Equal(s.T(), false, m.HasValue())
+}
